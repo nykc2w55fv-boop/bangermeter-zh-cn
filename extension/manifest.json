@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "__MSG_extName__",
+  "name": "Bangermeter — X 算法评分（简体中文版）",
   "version": "0.11.0",
-  "description": "__MSG_extDescription__",
+  "description": "使用 X 公布的「为你推荐」权重和评分公式评估帖子。每项评分因素均标注来源。",
   "default_locale": "en",
   "permissions": ["storage"],
   "host_permissions": [],
@@ -11,7 +11,7 @@
   },
   "content_scripts": [
     {
-      "matches": ["https://x.com/*", "https://twitter.com/*"],
+      "matches": ["https://x.com/*", "https://pro.x.com/*", "https://twitter.com/*"],
       "js": ["weights.js", "scoring.js", "i18n.js", "content.js"],
       "css": ["styles.css"],
       "run_at": "document_idle"
@@ -19,7 +19,7 @@
   ],
   "action": {
     "default_popup": "popup.html",
-    "default_title": "__MSG_actionTitle__"
+    "default_title": "Bangermeter — X 算法评分"
   },
   "icons": {
     "16": "icons/icon16.png",

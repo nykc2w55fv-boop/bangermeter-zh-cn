@@ -1,319 +1,37 @@
-# Bangermeter ⚡
+# Bangermeter 简体中文版
 
-![Bangermeter — score any tweet with X's own algorithm](store-assets/promo-marquee-1400x560.png)
+[下载最新版安装包](https://github.com/nykc2w55fv-boop/bangermeter-zh-cn/releases/latest/download/Bangermeter-zh-CN.zip) · [版本说明](https://github.com/nykc2w55fv-boop/bangermeter-zh-cn/releases/latest) · [英文原项目](https://github.com/itsryanlenk/bangermeter)
 
-**Score any post with X's own published ranking weights.**
+Bangermeter 是一个给 X 帖子和草稿打分的 Chrome 扩展。这个分支默认显示简体中文，支持普通 X（`x.com`）和 X Pro（`pro.x.com`）。评分公式和权重沿用 Ryan Lenk 的原版。
 
-A Chrome extension that scores posts on x.com using the real For You weights and the real
-scorer arithmetic from [xai-org/x-algorithm](https://github.com/xai-org/x-algorithm) —
-`vm-ranker/params.rs` (mirrored in `home-mixer/params/param.rs`) for the values,
-`xai-value-model/scoring.rs` for the math. Full source-traced findings: [RESEARCH.md](RESEARCH.md).
+## 安装
 
-## What you actually do with it
+1. [下载 ZIP](https://github.com/nykc2w55fv-boop/bangermeter-zh-cn/releases/latest/download/Bangermeter-zh-CN.zip)，解压到会长期保留的文件夹。
+2. 在桌面版 Chrome 打开 `chrome://extensions/`，开启右上角的「开发者模式」。
+3. 点击「加载已解压的扩展程序」，选中**直接包含 `manifest.json` 的文件夹**。
+4. 刷新 X 或 X Pro。帖子底部的点赞、转发一行会出现带 ⚡ 的评分徽标。
 
-1. **Scroll x.com.** Every post picks up a ⚡ badge with two scores, 0–100 — `C` for what
-   the content alone would be predicted to earn, `E` for what the post actually earned per
-   view. **50 is a typical post**: it is a comparison against a median post, not a grade,
-   and not a prediction of reach.
-2. **Click the badge.** You get the breakdown in plain English — which signals fired, what
-   each reply and repost is worth, what age cost it — with every number cited to the line
-   of X's published code it came from.
-3. **Start typing a post.** A live meter scores your draft as you write, and `+ compare`
-   holds up to three variants so you can pick one before you send it.
+如果选择下载仓库源码，请加载源码里的 `extension/` 目录。此前安装过原版的用户，可以只启用一个版本以免出现重复徽标。更新安装包时，用新版文件更新原来的解压目录，再到扩展卡片点「重新加载」，最后刷新网页。
 
-Everything below is why you can trust the numbers.
+## 使用
 
-## Install
+- **看帖子**。点击 ⚡ 徽标可查看评分详情。**C 分**依据内容信号估算内容吸引力。**E 分**依据可见浏览量和实际点赞、回复、转发计算加权互动率。两项分数各自以 50 分为中位参考。收藏会显示在详情里，评分公式没有收藏权重。浏览量不可见时只显示 C 分，E 分前的 `~` 提醒浏览样本较少。
+- **写草稿**。发帖框会显示实时内容分。点「＋对比」可暂存最多三个版本，离开页面后对比分数会清除。
+- **调设置**。点工具栏图标可切换界面语言和主题、开启本地评分历史、查看权重表或导入 X 的可见性报告。评分历史默认关闭。历史和导入的报告保留在本地浏览器，偏好设置可通过 Chrome 同步。扩展没有自己的数据服务器。
 
-**From the Chrome Web Store** — [Bangermeter](https://chromewebstore.google.com/detail/hecnkfmbffaccdljhpkcoefickilfgmh).
-Installing opens a one-page quick start; the popup keeps a link back to it.
+## 以后刷推，重点盯哪 4 个指标判断值不值得学？
 
-**From source**, to read it before you run it, or to work on it:
+把 `X Viral Monitor` 和 `Bangermeter` 搭配起来，可以先用流速找候选，再用互动分和回复判断值得学的是选题、开头还是正文。
 
-1. Open `chrome://extensions`
-2. Enable **Developer mode** (top right)
-3. Click **Load unpacked** → select the `extension/` folder
+1. **流速徽章（🔥 / 🚀）——先看热度。** 看到 `77.7k/h` 这种高流速，先把帖子圈进候选池。流速告诉你帖子当时传播得有多快，是否值得跟进还要看互动和正文。
+2. **Bangermeter 的 `E` 分（实际互动分）——重点看互动效率。** E 分衡量单位浏览量带回的加权互动，50 分对应插件参考样本的**中位水平**。
+   - **高流速 + 低 E 分（例如红色 `E26`）**。先看选题和开头为什么能吸引浏览，再看回复里的互动质量。低 E 分只说明加权互动率偏低，单凭这个分数无法判断帖子是否在引战。
+   - **流速起量 + E 分接近或超过 50**。可以优先检查正文是否有可复用的结构。曝光规模较小的帖子，如果 E 分表现好、浏览样本也足够，同样值得细读。带 `~` 的小样本先观察。像《Second Brain》那条，示例里的 `E40` 高于 `E26`，仍低于 50 分基准，值得结合正文和回复再判断。
+3. **弱化 `C` 分（内容吸引力）——优先用于发帖前自查。** 如果一屏帖子集中在 `C60`、`C61`、`C62`，这些微小差异没必要左右筛选。C 分来自问句、文本长度等内容信号，更适合在写草稿时对照详情，看哪些地方还有改进空间。
+4. **看回复质量——决定拆解到哪一层。** 打开原帖看几条有代表性的回复。如果读者在复述观点、补充例子、追问细节或围绕论据讨论，值得拆正文的结构和论证。如果回复主要围绕标题、语气或争议，就先记选题和开头。
 
-> **August 13, 2026.** X published the production weights for the For You timeline. Until
-> that morning the only weights anyone had were a March/April 2023 snapshot, and about a
-> third of the ranking heads had never been given a number at all. Bangermeter v0.9.0
-> replaced the entire weight layer with the published set. Everything below describes the
-> new one.
+## 来源与许可
 
-## What it looks like
-
-![The breakdown panel open on a live post](store-assets/screenshot-1280x800.png)
-
-Every post gets a badge. Click it for the breakdown: which signals fired, what each
-reply and repost is worth, the rescoring factors that applied, and a "Show the math"
-expander with the full weight × probability table.
-
-## What the scores mean
-
-Every post gets up to two 0–100 scores (50 = median baseline post):
-
-- **C — Content score (prospective).** What the ranker would be predisposed to predict from
-  the *content* alone: baseline action probabilities per head, adjusted by detected content
-  signals (question, thread, video, bare link, hashtag piles, engagement bait), run through
-  the published weights and the real scorer arithmetic.
-- **E — Engagement score (retrospective).** Applies the published weights to the post's
-  *actual* rates (likes/reposts/replies ÷ views). Requires a visible view count.
-
-Click the badge for the breakdown: per-head contributions (`weight × P`), detected signals
-with direction and provenance, rescoring factors, freshness, and a collapsible table of
-what the published weights actually say.
-
-## Creator tools (v0.10.0)
-
-- **Reply mode.** Reply drafts are scored as replies — the ×0.75 in-network reply factor
-  the compose meter previously missed — and the breakdown panel gets a reply-scoring
-  section: out-of-network replies never reach For You at all (`OONRetweetReplyFilter`),
-  replies are ineligible for the +15.0 mutual-follow boost, and replies to accounts over
-  250K followers (as of Sept 30, 2026 — X has raised that gate eleven times since August)
-  are scored 0–3 by a Grok model whose rubric X withholds (the published
-  *inputs* are listed; no invented direction — and no duration for the score-0 label,
-  because none is published). Where a reply sorts inside a thread is disclosed as
-  unpublished rather than guessed.
-- **Score history (opt-in).** Off by default; enable it in the popup and opening a
-  breakdown panel logs the scores to a local, capped list (`chrome.storage.local`,
-  200 entries — id, time, scores, an 80-char snippet). The popup shows the recent log
-  with links back to each post, plus a Clear button. Nothing ever leaves the browser.
-- **Draft comparison.** The compose meter gains a `+ compare` button: save up to three
-  variants of a draft (A/B/C), rewrite, and pick the best-scoring one. Variants live in
-  memory only and vanish with the page.
-- **Posting-cadence warning.** When an author has more than one post in the loaded stretch
-  of feed, the panel reports the author-diversity attenuation production would apply —
-  `(1 − 0.25) × 0.5^k + 0.25`: an author's 2nd post in the slate runs ×0.625, the 3rd
-  ×0.44, to a ×0.25 floor — wherever in the slate they sit. Reported as context, not
-  applied to the score (it is slate-relative and viewer-specific).
-- **Under the Hood import.** Pilot-cohort users can import the JSON report X lets them
-  download from `x.com/i/jf/under_the_hood`; the popup summarizes the visibility labels X
-  itself applied (monthly aggregates; at X's published defaults the report carries no post
-  IDs). Parsed locally,
-  stored locally, validated against the published label allowlist.
-
-## Methodology and honesty
-
-- **Formula:** `Σ(weight × P(action))` over the Phoenix head set, then `offset_score` —
-  positive posts get `+0.001`, and any post whose weighted sum goes **net-negative** is
-  rescaled into `[0, 0.000897)`, which drops it below every positive-scoring post no matter
-  what else it earned. Then the post-hoc factors: author diversity
-  `(1 − floor) × decay^k + floor`, and the ×0.75 out-of-network factor. This is a direct
-  port of X's value model (`xai-value-model/scoring.rs`, which replaced `ranking_scorer.rs`
-  when X moved scoring into its vm-ranker service on Sept 24, 2026 — same math at published defaults), not an
-  approximation of it.
-- **Weights:** the published production set, following param.rs (stamp
-  2026-10-28T16:00:35Z). Likes **0.66** · replies 5.0 (**20.0** on an
-  original post from a mutual follow) · reposts 1.0 · quotes 5.0 · shares 2.0 · DM shares
-  5.0 · **copy-link shares 20.0** · follow-author 4.0 · **post clicks 0.3** · **click dwell 0.4** · link opens 0.2 ·
-  photo expand / quoted click 0.05 · **video open 0.02** · **binary dwell 0.05** · dwell
-  time **0.006** per second · post unexplored **0.015** · not-dwelled −0.02 · **not-interested −52.272** · block −31.2 · mute
-  −58.8 · report −234.0. Profile clicks, **video-quality-view**, quoted-vqv, react-with-video,
-  and the continuation and profile-visit heads ship at **0.0**.
-- **Five weights moved in param.rs between X's Oct 6 and Oct 13, 2026 syncs.** Post
-  unexplored went 0.02 → **0.015** (Oct 6 sync, published Oct 7). Video open went 0.07 →
-  **0.02**, dwell time 0.004 → **0.006** per second, and Likes 0.5 → 0.6 (Oct 12 sync,
-  published Oct 13). Likes then went 0.6 → **0.66** and not-interested −47.52 →
-  **−52.272**, another exact 10% (Oct 13 sync, published Oct 14). vm-ranker/params.rs still has the previous five numbers. The daily sync check
-  treats that disagreement as drift and was not changed to ignore it. Four heads were
-  added, all at 0. Two video-carousel weights also appeared in param.rs (1.0 and 0); they
-  are not ranking heads, and the carousel is off by default.
-- **Three more weights moved**, published 29 September 2026 from X's 28 September sync.
-  Post clicks went 0.4 → **0.3**, click dwell went 0.0 → **0.4**, and not-interested went
-  −43.2 → **−47.52** — the first negative weight X has touched since publishing the table.
-  Click dwell is named like a per-second term, but X's model config trains it as a yes/no
-  head with a 10.0 threshold, so the 0.4 multiplies a probability: the chance a reader
-  clicks in *and* stays. That is always smaller than the chance of a click, so 0.4 against
-  0.3 does not mean staying is worth more than clicking. A browser cannot see clicks, so
-  it is estimated.
-- **Three weights moved on 25 August 2026**, caught up in v0.10.2.
-  Video-quality-view went 0.05 → **0.0**, binary dwell went 0.0 → **0.05**, video open went
-  0.05 → **0.07**. Finishing a clip stopped paying; *stopping the scroll* started. Versions
-  through v0.10.0 said binary dwell paid nothing — that claim was true when written and is
-  now false, which is the whole reason weight provenance is re-verified every release.
-- **Weights multiply predicted probabilities, not counts.** A report does not cost 234
-  points; −234 is the coefficient on *how likely a viewer is to report the post*. On Aug 14
-  2026 X made this explicit in the code: reading the ratios as count equivalences — their
-  example is *"one report cancels 468 likes"* — is **"incorrect."** They also gave the
-  reason the negatives are so large: a Report's baseline probability is **over 1000× lower
-  than a Like's**, so it needs a bigger coefficient to affect ranking at all.
-- **Engagement only counts from the Home Timeline.** Opening a link someone sent you has no
-  ranking impact, so passing your own post round a group chat does nothing for reach. The
-  copy-link coefficient pays for a viewer copying it *in-feed*, not for the visits after.
-- **Brigading is structurally weak.** Predictions are per-viewer and personalized, so mass
-  block/report campaigns mostly shift what gets recommended to users similar to the
-  brigaders rather than burying the post for everyone.
-- **Hard filters sit outside scoring.** `OONRetweetReplyFilter` removes replies and reposts
-  from accounts you don't follow before ranking, so no weight offsets it — a reminder that the
-  weighted sum is not the whole system. `Brazil2026ElectionFilter` was another until X
-  removed it after the election (code published Oct 28, 2026).
-- **The honest boundary.** The weights are X's. The probabilities are ours. X predicts them
-  with Phoenix, a transformer we don't have; Bangermeter derives three of them from real
-  counts (likes, replies, reposts) and estimates the rest from content signals. Every
-  number in the UI is tagged with which layer it came from, and the popup labels every head
-  as `from counts`, `estimated`, `zeroed by X` or `viewer-specific`.
-- **Gates we can see and gates we can't.** Video-quality-view needs duration strictly over
-  10s, so GIFs and short clips are excluded — the extension reads the duration overlay
-  where X renders one. A second gate (the *viewer* having under 10,000 followers)
-  stopped reaching the served score on Sept 24, 2026: X's vm-ranker checks duration only.
-  Either way the gate decides whether to add **nothing**, since the weight behind them is 0.0 — the machinery is
-  kept because X can re-enable it by moving one number.
-- **Ten seconds is the bar that matters now.** The binary dwell head is not "looked at it":
-  X's reference implementation marks it when a viewer *engaged* **and** dwelled **≥10
-  seconds**, while not-dwelled means they never engaged at all. The two are not opposites —
-  a post read for four seconds and scrolled past fires neither. `MinVideoDurationMs` is
-  10,000 too, but it is a different rule — it gates on the **clip's own length**, not on how
-  long anyone watched, and it is a strict greater-than.
-- **There is a published fresh-post lane, and it ships on.** On every For You request
-  **at most one** post is lifted to around **slot 15**. To qualify it must be an original
-  post whose author has **≤50,000 followers**, no more than **2 hours** old, and still
-  under **200** Home impressions. Among the qualifiers, X now uses Thompson sampling on
-  the like rate to pick a shortlist of two, and the higher model score wins — so with one
-  or two qualifiers, likes change nothing. One post per request — not per author, not per
-  session. Every one of those gates moved in X's Sept 29 sync, published Sept 30, 2026;
-  until then it was ≤1,000 followers, 48 hours, 1,000 impressions,
-  and the highest score won. Bangermeter
-  cannot tell whether a given post *was* promoted (the slate is server-side), so it reports
-  the eligibility rules and refuses to claim credit for the outcome.
-- **The content features are published now too.** X sends Phoenix seven things about a
-  post's content with every candidate (no published model code reads them yet): has-video, longest video duration, has-photo, media count,
-  weighted text length, **newline count**, and has-URL. A link counts as 23 characters
-  whatever its real length, CJK and emoji count 2, and a media attachment's own `t.co` is
-  subtracted before has-URL is decided — so posting an image does **not** make your post
-  "have a link". No coefficients are attached to any of them, so the tool lists them and
-  does not score them.
-- **No folklore numbers.** "Bookmark 20×", "links −30–50%", "3+ hashtags −40%", "block
-  −120 / mute −100" all failed source-tracing before the release — and none of them matched
-  the real values when those arrived. Bookmarks turn out to have **no weight at all**.
-- **Two archival factors, opt-in or sourced.** The 2023-era **×4 / ×2** verified-author
-  multiplier (archived commit `ec83d01dca`; absent from the 2026 release) is behind a
-  default-off toggle. Posts with a displayed **Community Note** get ×0.5 on the prospective
-  score — that 0.5 is our round figure inside a ×0.39–0.75 range from three causal studies,
-  and is labeled as our pick, not X's.
-- **Relative score, not predicted reach.** X says it syncs these defaults from production
-  by cron, which makes them current rather than historical — but the score is still a
-  relative read against a typical post, not an impression forecast.
-
-## Known limitations
-
-- Count parsing prefers a locale word table (16 locales today; more join only with sourced
-  strings) and falls back to the locale-independent `data-testid` buttons, so counts and
-  views survive even on locales the table does not know.
-- Reply detection uses whichever signal the surface actually provides: the "Replying to"
-  label on timelines, and **position in the thread** inside a conversation or on
-  `with_replies`, where X renders no label at all.
-- Engagement-bait detection covers English, Hinglish and Devanagari imperative calls to
-  action. The Devanagari patterns are **not** transliterations of the Hinglish ones —
-  Hindi puts the call to action last, so "like karo agar X" is an English calque that
-  barely occurs, and the real form is "…तो लाइक करें" or "कमेंट बॉक्स में जरूर". That
-  anchor does the work: on X the bare verb phrase is usually an argument ("पहले पढ़ो,
-  फिर कमेंट करो" — *first read it, then comment*) rather than a request for engagement,
-  so bare `कमेंट कर` / `फॉलो कर` are deliberately excluded. Validated against real Hindi
-  posts collected from X: zero false positives, conservative recall.
-- The rhetorical-question genre ("Kya …?", "X ya Y?") is deliberately not detected.
-  Tested against 228 real posts, the structural rule for it flagged exactly one — a
-  top-quartile post — and missed the actual bait. ALL-CAPS detection is Latin-only by
-  nature, since caseless scripts have no capitals to count. Reply detection on timeline posts still needs the
-  localized "Replying to" marker; reply *drafts* are detected structurally (dialog order,
-  status-page URL), which is locale-independent.
-- The E score needs a visible view count (hidden on some surfaces).
-- Viewer-specific factors can't be observed: in-network status and mutual-follow status. Out-of-network and mutual-follow are popup toggles instead.
-- Quote counts aren't exposed in the timeline DOM, so the quote head (5.0) is estimated
-  rather than measured.
-- X changes its DOM without notice; selectors have documented fallbacks.
-
-## Project files
-
-| File | Purpose |
-|---|---|
-| `extension/` | The Chrome extension (MV3, vanilla JS, no build step) |
-| `extension/weights.js` | Single source of truth: weight layer + estimator layer, all provenance-tagged |
-| `extension/scoring.js` | Pure scoring engine (direct port of X's value model, `xai-value-model/scoring.rs`) |
-| `extension/content.js` | Badges, breakdown panel, compose meter |
-| `extension/background.js` | Service worker. One listener: open the quick start on first install, never on update |
-| `extension/welcome.html` | The quick start itself — self-contained, loads nothing over the network |
-| `extension/test.html` | Engine self-test — open in any browser (429 assertions) |
-| `extension/fixture.html` | X-DOM fixture harness for the content script |
-| `extension/fixture-thread.html` | Reply-detection harness — asserts the conversation, `with_replies` and home-timeline surfaces separately, because X marks a reply differently on each. Needs `serve-fixtures.js` (it reads `location.pathname`) |
-| `extension/serve-fixtures.js` | Tiny static server for the harnesses, including the x.com-shaped paths the reply-detection cases need |
-| `extension/fixture-compose.html` | Compose-meter visibility harness — asserts the draft meter survives X's scrolling, overflow-hidden compose dialog (it prints its own pass count) |
-| `extension/bangermeter.user.js` | Single-file Tampermonkey build (generated — see `store-assets/make-userscript.ps1`) |
-| `packages/bangermeter-rank/` | Ranking modes (account audit, C checklist, E retrospective, stealability), score cards pinned to the `param.rs` sync, the daily weight-sync check, the customer audit report, and the copy and Numbers gates. Zero dependencies. See its README |
-| `skills/audience-readout/` | Claude skill: collect one account's real posts, score them, and write a read-out. Carries the analytical rules (rates not counts, confound checks) and the privacy rule — never commit an archive. Copy to `~/.claude/skills/` to install — see its SKILL.md |
-| `store-assets/weights-export.js` | Emits the weight values the store art needs, straight from `weights.js` |
-| `store-assets/make-*.ps1` | Generators for the userscript, the upload package, and the promo art |
-
-Nothing numeric is typed into the store art. `make-promos.ps1` and `make-screenshot.ps1`
-read their weights and ratios from `extension/weights.js` through `weights-export.js`, so a
-tile cannot keep publishing a value after the code has moved on — which is exactly what
-happened when those numbers were hardcoded.
-
-## Verification status
-
-- Engine math: **429/429 self-tests pass** (`test.html`). Every published
-  weight and its feature-switch parameter name is asserted individually against
-  `param.rs`, or `vm-ranker/params.rs` for the three heads only it publishes, so a silent transcription error fails the suite rather than shipping.
-  param.rs moved five heads between the Oct 6 and Oct 13, 2026 syncs (published
-  Oct 7–14), and vm-ranker/params.rs did not, so the two upstream files disagree on
-  those five at the 2026-10-16T16:00:32Z sync; `weights.js` follows param.rs. Four heads were added
-  (29 in the roster), plus two video-carousel weights that are not heads. X deleted a 26th head,
-  `cont_active_secs_5m_residual_norm` (weighted 0.0), in its Sept 23 sync, published
-  Sept 24.
-  `packages/bangermeter-rank` runs `sync` daily in CI to catch the next change.
-- Locale strings (reply markers and count words for 16 locales) are transcribed from X's
-  own production i18n bundles (`abs.twimg.com/responsive-web/client-web/i18n/*`), fetched
-  Aug 25, 2026 and cross-checked against Wayback captures of the same bundles. Locales
-  join the table only with a sourced string — the same rule the weight layer follows.
-  The "Visibility limited" label (message key `b3296688`, all 16 locales) was added
-  Sept 30, 2026 from the bundles named in the Sept 12 Wayback capture of the
-  `x.com/i/flow/login` chunk manifest. The live logged-out page now serves X's x-web
-  client, which carries no such manifest. The repost line ("Alice reposted",
-  "山田さんがリポスト"; message keys `fcd931ed` and `ae408b76`, all 16 locales) was added
-  Nov 3, 2026 from the bundles named in the Sept 24 capture, the newest still on
-  responsive-web. The Sept 12 bundles carry the same strings. Until then, reposts were
-  recognized only in English.
-- Adversarially reviewed at v0.9.0 by three independent passes — weight transcription,
-  Rust-to-JS arithmetic fidelity, and a stale-claim sweep. The arithmetic pass swept
-  ~654k generated inputs for NaN, out-of-range and non-monotonic scores and found none,
-  and used mutation testing to prove which assertions were load-bearing. Findings from
-  all three are fixed in this release; the notable ones are recorded in
-  [RESEARCH.md](RESEARCH.md).
-- Content script (badges, panel, meter, virtualized lists, quote-tweet scoping): exercised
-  against the DOM fixture (`fixture.html`). The fixture is an eyeball harness — it renders
-  and must not throw; it carries no assertions.
-- Live x.com: verified in a logged-in session, Aug 2026. Badge, panel and per-head copy
-  render correctly against the live DOM, and a spot-checked post matched the engine's
-  arithmetic to the rounded point. Live use is also what surfaced the two compose-meter
-  defects the fixture had not modeled. Selectors target `article[data-testid="tweet"]`,
-  the action-bar `role="group"` aria-label, and `tweetTextarea_*`, each with fallbacks.
-
-## Credits
-
-- **First-run onboarding** — [@harvey_control](https://x.com/harvey_control), who installed
-  Bangermeter, kept using it to write replies, and then took the trouble to say the thing a
-  happy user almost never bothers to say: that he could not work out quickly what it was for.
-  That is more useful than a bug report, because nobody files a ticket for confusion — they
-  just leave. He was right about the cause, too. This README and the store listing were
-  ordered provenance-first, every number sourced before you learn what to do with it, which
-  reads as rigor to someone already convinced and as a wall to everyone else. Installing
-  compounded it by completing in silence. Both changed in 0.10.1: the quick start opens
-  itself, and the first thing you read here is what the thing does rather than where the
-  weights came from. A tool nobody can get into is not a rigorous tool, just an unused one.
-
-- **Hindi and Hinglish guidance** — [Shivangi Bhattacharjee](https://www.linkedin.com/in/shivangi-bhattacharjee/),
-  who worked through the bait phrasing with us. The useful finding was structural rather
-  than lexical: Hindi puts the call to action at the *end* of the sentence, so the
-  Hinglish "like karo agar…" order is an English calque and a Devanagari pattern built by
-  transliterating it would never have matched anything. Every Hindi pattern the extension
-  ships anchors on `तो` / `जरूर` instead, and the bare verb is deliberately left alone
-  because on X it usually belongs to an argument rather than a request for engagement.
-
-- **Japanese translation** — [sysCat](https://x.com/sysCat64) found the English panel hard
-  to read and translated it for their own use in
-  [sysCat64/bangermeter-ja](https://github.com/sysCat64/bangermeter-ja). That work is now
-  the extension's Japanese: every Japanese line it shows is theirs or reviewed by them. The
-  glossary is theirs too (内容スコア, 反応スコア, おすすめ, フォロー外), and so is the rule
-  for the tone: everyday Japanese for someone growing an account, not developer Japanese.
-  They also caught two things an English speaker would not have: a full-width ？ was never
-  counted as a question, and the welcome page's uppercase styling turned "x.com" into
-  "X.COM".
+- 原版由 Ryan Lenk 开发。原始版权和完整 MIT 许可见 [LICENSE](LICENSE)，英文原说明保存在 [README.upstream.md](README.upstream.md)。
+- 原版日语翻译来自 [sysCat](https://github.com/sysCat64/bangermeter-ja)。X 评分器的来源和适用的 Apache 2.0 许可见 [第三方声明](THIRD_PARTY_NOTICES.md)。
+- 本项目是独立维护的开源分支，与 X、xAI 或 X Viral Monitor 无隶属关系。
